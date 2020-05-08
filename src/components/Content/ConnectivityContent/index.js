@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-// import { Text, Link } from '@zeit-ui/react';
+import { Input, Text } from '@zeit-ui/react';
 import makeStyles from 'components/makeStyles';
 import ConnectivityCard from 'components/Cards/ConnectivityCard';
+import { Check } from '@zeit-ui/react-icons';
 
 const useStyles = makeStyles((ui) => ({
   root: {
@@ -53,11 +54,37 @@ const useStyles = makeStyles((ui) => ({
     singleHolder: {
       width: "100%"
     }
+  },
+  singleFull: {
+    width: "100%"
+  },
+  inputCSS: {
+    display: "block !important",
+    margin: "0 auto",
+    maxWidth: "400px",
+    backgroundColor: "white",
+    ['& .input-wrapper']: {
+      width: "100%"
+    }
   }
 }));
 
 const Content = ({ iata }) => {
   const classes = useStyles();
+  const [customHostname, setCustomHostname] = useState(null);
+  const [commitedHostname, setCommitedHostname] = useState(null);
+
+  const verifyHostname = () => {
+    if ((customHostname || "").trim() === "") {
+      return false;
+    }
+    const regex = new RegExp(/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$/);
+    if (regex.test(customHostname)) {
+      setCommitedHostname(customHostname);
+    } else {
+      alert("Invalid hostname!");
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -66,7 +93,7 @@ const Content = ({ iata }) => {
           <div className={classes.container}>
             <div className={classes.singleHolder}>
               <ConnectivityCard
-                name="Cloudflare Origin"
+                name="Cloudflare Primary"
                 host="1.1.1.1"
                 iata={iata || []}
               />
@@ -92,6 +119,32 @@ const Content = ({ iata }) => {
                 iata={iata || []}
               />
             </div>
+          </div>
+          <div className={classes.container} style={{ marginTop: "32pt" }}>
+            <Text h2 style={{ textAlign: "center" }}>Test my site</Text>
+            <div className={`${classes.singleHolder} ${classes.singleFull}`}>
+              <Input
+                clearable
+                placeholder="Enter Hostname"
+                width="100%"
+                className={classes.inputCSS}
+                iconRight={<Check />}
+                iconClickable={true}
+                onChange={e => setCustomHostname(e.target.value)}
+                onIconClick={verifyHostname}
+                onKeyUp={e => e.keyCode === 13 && verifyHostname()}
+                onClearClick={e => setCommitedHostname(null)}
+              />
+            </div>
+            {commitedHostname && (
+              <div className={`${classes.singleHolder} ${classes.singleFull}`}>
+                <ConnectivityCard
+                  name="Custom Hostname"
+                  host={commitedHostname}
+                  iata={iata || []}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

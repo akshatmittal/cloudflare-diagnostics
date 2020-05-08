@@ -76,10 +76,17 @@ const ProjectCard = ({ iata = [] }) => {
   const [data, setData] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const [reachability, setReachability] = useState([false, false, false, false]);
   const [secureDNS, setSecureDNS] = useState([false, false, false]);
 
+  const getReachable = async () => {
+    await Promise.allSettled(["4a", "4b", "6a", "6b"].map(e => fetch(`https://ipv${e}.cloudflare-dns.com/resolvertest`))).then(e => {
+      setReachability(e.map(f => f.status === "fulfilled"));
+    });
+  }
+
   const getSecureDNS = async () => {
-    await Promise.allSettled(["cf"].map(e => fetch(`https://is-${e}.cloudflareresolve.com/resolvertest`))).then(e => {
+    await Promise.allSettled(["cf", "dot", "doh"].map(e => fetch(`https://is-${e}.cloudflareresolve.com/resolvertest`))).then(e => {
       setSecureDNS(e.map(f => f.status === "fulfilled"));
     });
   }
@@ -97,7 +104,7 @@ const ProjectCard = ({ iata = [] }) => {
       });
       return result;
     }).then(e => {
-      Promise.allSettled([getSecureDNS()]).then(() => {
+      Promise.allSettled([getReachable(), getSecureDNS()]).then(() => {
         setData(e);
         setLoading(false);
       });
@@ -108,10 +115,10 @@ const ProjectCard = ({ iata = [] }) => {
     <Card shadow className={classes.card}>
       <div className={classes.title}>
         <div>
-          <Text h3>Warp Status</Text>
+          <Text h3>DNS Status</Text>
           <Text h6>
-            <Dot type={loading ? "warning" : (data.warp === "off" ? "error" : "success")} className={`${classes.dot} ${!loading && data.warp !== "off" && classes.dotSuccess}`}>
-              {loading ? "Testing" : `${(data.warp === "off" ? "Not " : "")}Connected`}
+            <Dot type={loading ? "warning" : (!secureDNS[0] ? "error" : "success")} className={`${classes.dot} ${!loading && secureDNS[0] && classes.dotSuccess}`}>
+              {loading ? "Testing" : `${(secureDNS[0] ? "Using" : "Not using")} 1.1.1.1`}
             </Dot>
           </Text>
         </div>
@@ -126,26 +133,50 @@ const ProjectCard = ({ iata = [] }) => {
           <Col span={12}>
             <div className={classes.infoContainer}>
               <Description
-                title="Using 1.1.1.1"
-                content={loading ? <Loading size="small" /> : (secureDNS[0] ? "YES" : "NO")}
+                title="DNS over TLS"
+                content={loading ? <Loading size="small" /> : (secureDNS[1] ? "Yes" : "No")}
               />
             </div>
           </Col>
           <Col span={12}>
             <div className={classes.infoContainer}>
               <Description
-                title="Warp Version"
-                content={loading ? <Loading size="small" /> : data.warp.toUpperCase()}
+                title="DNS over HTTPS"
+                content={loading ? <Loading size="small" /> : (secureDNS[2] ? "Yes" : "No")}
               />
             </div>
           </Col>
         </Row>
         <Row>
-          <Col span={24}>
+          <Col span={6}>
             <div className={classes.infoContainer}>
               <Description
-                title="True IP"
-                content={loading ? <Loading size="small" /> : data.ip}
+                title="IPV4 a"
+                content={loading ? <Loading size="small" /> : (reachability[0] ? "OK" : "FAIL")}
+              />
+            </div>
+          </Col>
+          <Col span={6}>
+            <div className={classes.infoContainer}>
+              <Description
+                title="IPV4 b"
+                content={loading ? <Loading size="small" /> : (reachability[1] ? "OK" : "FAIL")}
+              />
+            </div>
+          </Col>
+          <Col span={6}>
+            <div className={classes.infoContainer}>
+              <Description
+                title="IPV6 a"
+                content={loading ? <Loading size="small" /> : (reachability[2] ? "OK" : "FAIL")}
+              />
+            </div>
+          </Col>
+          <Col span={6}>
+            <div className={classes.infoContainer}>
+              <Description
+                title="IPV6 b"
+                content={loading ? <Loading size="small" /> : (reachability[3] ? "OK" : "FAIL")}
               />
             </div>
           </Col>
@@ -155,7 +186,7 @@ const ProjectCard = ({ iata = [] }) => {
         <div className={classes.footer}>
           <Server size={14} />
           {!loading && (
-            <Text className={classes.info}>{data.warp === "off" ? "Not Connected" : `${data.colo} - ${iata[data.colo] || "Unknown"}`}</Text>
+            <Text className={classes.info}>{!secureDNS[0] ? "Not Connected" : `${data.colo} - ${iata[data.colo] || "Unknown"}`}</Text>
           )}
           {loading && (
             <Loading size="small" />

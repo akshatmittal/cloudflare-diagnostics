@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import { Text, Link } from '@zeit-ui/react';
 import makeStyles from 'components/makeStyles';
 import WarpCard from 'components/Cards/WarpCard';
+import DNSCard from "components/Cards/DNSCard";
 
 const useStyles = makeStyles((ui) => ({
   root: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((ui) => ({
   },
   projects: {
     width: '100%',
-    padding: `calc(${ui.layout.gap} / 3)`,
+    // padding: `calc(${ui.layout.gap} / 3)`,
   },
   activity: {
     flex: 1
@@ -44,7 +45,17 @@ const useStyles = makeStyles((ui) => ({
     marginTop: ui.layout.gap,
     fontSize: 24,
     textAlign: 'center'
-  }
+  },
+  singleHolder: {
+    padding: `calc(${ui.layout.gap} / 3)`,
+    width: "50%",
+    display: "inline-block"
+  },
+  [`@media screen and (max-width: ${ui.layout.pageWidthWithMargin})`]: {
+    singleHolder: {
+      width: "100%"
+    }
+  },
 }));
 
 const Content = ({ iata }) => {
@@ -55,7 +66,12 @@ const Content = ({ iata }) => {
       <div className={classes.content}>
         <div className={classes.row}>
           <div className={classes.projects}>
-            <WarpCard iata={iata} />
+            <div className={classes.singleHolder}>
+              <WarpCard iata={iata} />
+            </div>
+            <div className={classes.singleHolder}>
+              <DNSCard iata={iata} />
+            </div>
           </div>
         </div>
       </div>

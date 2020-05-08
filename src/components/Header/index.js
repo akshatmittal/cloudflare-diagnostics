@@ -65,12 +65,12 @@ const Heading = ({ which }) => {
         <div className={classes.name}>
           <div className={classes.title}>
             <Text h2 className={classes.username}>
-              {which === "connectivity" ? "Connectivity Diagnostics" : "Warp Diagnostics"}
+              {which === "connectivity" ? "Connectivity Diagnostics" : "Warp & DNS Diagnostics"}
             </Text>
           </div>
           <div>
             <Text className={classes.integrationsTitle}>
-              {which === "connectivity" ? "Test Connectivity to the Cloudflare Network at different Plan levels" : "Test Warp Connectivity and Status"}
+              {which === "connectivity" ? "Test Connectivity to the Cloudflare Network at different Plan levels" : "Test DNS Connectivity, Warp Connectivity and Status"}
             </Text>
           </div>
         </div>

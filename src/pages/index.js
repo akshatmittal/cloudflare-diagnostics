@@ -29,6 +29,8 @@ export default function Home() {
           <meta name="robots" content="index, follow" />
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
           <meta name="author" content="Akshat Mittal" />
+          <link rel="icon" href="favicon.ico" />
+          <link rel="shortcut icon" href="favicon.ico" />
         </Head>
         <Menu toggleDarkMode={toggleDarkMode} />
         <Header which="connectivity" />
