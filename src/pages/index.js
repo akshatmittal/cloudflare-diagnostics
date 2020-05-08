@@ -25,6 +25,10 @@ export default function Home() {
         <CSSBaseline />
         <Head>
           <title>Cloudflare Diagnostics</title>
+          <meta name="description" content="This tools provides diagnosis for Cloudflare services including DNS, Connectivity & Warp." />
+          <meta name="robots" content="index, follow" />
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          <meta name="author" content="Akshat Mittal" />
         </Head>
         <Menu toggleDarkMode={toggleDarkMode} />
         <Header which="connectivity" />
