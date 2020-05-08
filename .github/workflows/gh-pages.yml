@@ -17,4 +17,4 @@ jobs:
           BASE_BRANCH: master
           BRANCH: gh-pages
           FOLDER: out
-          BUILD_SCRIPT: npm install && npm run-script build
+          BUILD_SCRIPT: npm install && npm run-script export
