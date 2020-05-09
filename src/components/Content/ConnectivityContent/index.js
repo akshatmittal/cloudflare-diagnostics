@@ -7,7 +7,7 @@ import { Check } from '@zeit-ui/react-icons';
 const useStyles = makeStyles((ui) => ({
   root: {
     backgroundColor: ui.palette.accents_1,
-    borderBottom: `solid 1px ${ui.palette.accents_2}`,
+    borderBottom: `solid 1px ${ui.palette.accents_2}`
   },
   content: {
     width: ui.layout.pageWidthWithMargin,
@@ -62,7 +62,7 @@ const useStyles = makeStyles((ui) => ({
     display: "block !important",
     margin: "0 auto",
     maxWidth: "400px",
-    backgroundColor: "white",
+    backgroundColor: ui.palette.background,
     ['& .input-wrapper']: {
       width: "100%"
     }
@@ -121,7 +121,7 @@ const Content = ({ iata }) => {
             </div>
           </div>
           <div className={classes.container} style={{ marginTop: "32pt" }}>
-            <Text h2 style={{ textAlign: "center" }}>Test my site</Text>
+            <Text h2 style={{ textAlign: "center" }}>Test My Site</Text>
             <div className={`${classes.singleHolder} ${classes.singleFull}`}>
               <Input
                 clearable

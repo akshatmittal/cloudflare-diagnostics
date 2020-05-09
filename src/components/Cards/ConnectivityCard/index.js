@@ -95,6 +95,9 @@ const ProjectCard = ({ name, host, iata = [] }) => {
       m.forEach(e => {
         e && (result[e[0]] = e[1]);
       });
+      if (!result.ip && !result.colo) {
+        throw Error;
+      }
       return result;
     }).then(e => {
       getPings().then(timings => {
@@ -131,7 +134,7 @@ const ProjectCard = ({ name, host, iata = [] }) => {
               <div className={classes.infoContainer}>
                 <Description
                   title="IP Version"
-                  content={loading ? <Loading size="small" /> : `IPV${data.ip.indexOf(":") > -1 ? "6" : "4"}`}
+                  content={loading ? <Loading size="small" /> : `IPV${data.ip?.indexOf(":") > -1 ? "6" : "4"}`}
                 />
               </div>
             </Col>
@@ -139,7 +142,7 @@ const ProjectCard = ({ name, host, iata = [] }) => {
               <div className={classes.infoContainer}>
                 <Description
                   title="HTTP Version"
-                  content={loading ? <Loading size="small" /> : data.http.toUpperCase()}
+                  content={loading ? <Loading size="small" /> : data.http?.toUpperCase()}
                 />
               </div>
             </Col>
@@ -157,7 +160,7 @@ const ProjectCard = ({ name, host, iata = [] }) => {
               <div className={classes.infoContainer}>
                 <Description
                   title="Last 3 Latencies (ms)"
-                  content={loading ? <Loading size="small" /> : data.timings.join(", ")}
+                  content={loading ? <Loading size="small" /> : data.timings?.join(", ")}
                 />
               </div>
             </Col>
@@ -166,7 +169,7 @@ const ProjectCard = ({ name, host, iata = [] }) => {
                 <div className={classes.infoContainer}>
                   <Description
                     title="SNI Status"
-                    content={loading ? <Loading size="small" /> : data.sni.toUpperCase()}
+                    content={loading ? <Loading size="small" /> : data.sni?.toUpperCase()}
                   />
                 </div>
               </Row>
